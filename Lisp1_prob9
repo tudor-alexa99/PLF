@@ -1,0 +1,92 @@
+;9
+;a)  write a function that merges 2 sorted sets, keeping the duplicate values
+
+(defun merge_sets(l1 l2)
+  (cond
+       ;((if THIS) then THIS)
+       ((null l1) l2)  ; if l1 = [], return l2
+       ((null l2) l1)  ;
+       ((<= (car l1) ( car l2)) ( cons (car l1) ( merge_sets (cdr l1) l2))) 
+       ; that above reads like
+       ;CAR = head of the list
+       ;CDR = tail of the list
+       ;CONS a b  = cosntruct a list that has the head a and the tail b  
+       ((<= (car l2) (car l1)) ( cons (car l2) (merge_sets l1 (cdr l2))))
+))
+
+
+;b) Write a function to replace an element E by all elements of a list L1 at all levels of a given list L
+
+(defun remove_el(l e)
+    (cond
+        ((null l) nil )
+        ((listp (car l)) (remove_el (car l) e))
+        (( = (car l) e) (cons e (remove_el (cdr l) e )))
+        ( t (cons (car l) (remove_el (cdr l) e )))))
+
+(defun replace_list (L L1 e)
+	(cond 
+		((NULL L) NIL)
+		((listp (car L)) (cons (replace_list (car L) L1 e) (replace_list (cdr L) L1 e)))
+		(( EQUAL (car L) e) (APPEND  L1 (replace_list (cdr L) L1 e) ))
+		( T ( cons (car L) (replace_list (cdr L) L1 e)))
+	)
+)
+
+;c)  Write a function to determines the sum of two numbers in list representation, and returns the corresponding decimal number, without transforming the representation of the number from list to number
+
+; we're going to need the lists to be reversed
+(defun reverse_list(L)
+	(cond 
+		((NULL L) NIL)
+		(T (APPEND (reverse_list (cdr L)) (LIST (car L))))
+	)
+)
+
+; function that computes the number for the reversed lists
+(defun sum(L K c p r)
+	(cond
+		((AND(NULL L) (NULL K)) (+(* c p) r))
+		((NULL K) (sum L (LIST 0) c p r))
+		((NULL L) (sum (LIST 0) K c p r))
+		(T (print c) (sum(cdr L) (cdr K)(/ (- (+(car L)(car K) c)(MOD (+(car L)(car K) c) 10))10) (* p 10) (+ r (*(MOD (+(car L)(car K) c) 10 ) p))))
+	)
+)
+
+;we'll need a wrapper that calls the functions above and initialises the variables 
+
+ 
+(defun compute_number (L1 L2)
+	(sum (reverse_list L1) (reverse_list L2) 0 1 0 ))
+
+;there are a few extra prints, representing the carry for each step (used those for debugging)
+
+;d) Write a function to return the greatest common divisor of all numbers in a linear list.
+
+;we'll need a function that computes the gcd of 2 numbers
+
+(defun get_gcd (a b)
+	(cond 
+		((EQUAL a b) a)
+		((> a b) (get_gcd (- a b) b))
+		(T (get_gcd a (- b a)))
+	)
+)
+
+(defun gcd_list(L d)
+	(cond 
+;		((print d))
+     		((NULL L) d)
+		((not (integerp (car L))) (gcd_list (cdr L) d )) 
+
+		((EQUAL d 0) (gcd_list (cdr L) (car L))) 
+      		((integerp (car L)) (gcd_list (cdr L) (get_gcd (car L) d)))
+;		((= d 1) 1)
+		
+
+	)
+)
+
+; now the wrapper 
+(defun gcd_funct (L)
+	(gcd_list L 0))

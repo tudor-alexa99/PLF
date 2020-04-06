@@ -1,0 +1,59 @@
+(defun replace_list (L L1 e)
+	(cond 
+		((NULL L) NIL)
+		((listp (car L)) (cons (replace_list (car L) L1 e) (replace_list (cdr L) L1 e)))
+		(( EQUAL (car L) e) (cons L1 (replace_list (cdr L) L1 e) ))
+		( T ( cons (car L) (replace_list (cdr L) L1 e)))
+	)
+)
+
+(defun reverse_list(L)
+	(cond 
+		((NULL L) NIL)
+		(T (APPEND (reverse_list (cdr L)) (LIST (car L))))
+	)
+)
+
+(defun sum(L K c p r)
+	(cond
+		((AND(NULL L) (NULL K)) (+(* c p) r))
+		((NULL K) (sum L (LIST 0) c p r))
+		((NULL L) (sum (LIST 0) K c p r)))
+		(T (sum(cdr L) (cdr K) (- (+(car L)(car K) c)(MOD (+(car L)(car K) c) 10)) (* p 10) (+ r (* (MOD (+(car L)(car K) c) 10) p))))
+	)
+)
+/// paranteze
+// functia de inversare 
+/ wrapper
+ 
+(defun compute_number (L1 L2)
+	(sum (reverse_list L1) (reverse_list L2) 0 1 0 ))
+	
+	
+	
+// d) Write a function to return the greatest common divisor of all numbers in a linear list.
+(defun get_gcd (a b)
+	(cond 
+		((EQUAL a b) a)
+		((> a b) (get_gcd (- a b) b))
+		(T (get_gcd a (- b a)))
+	)
+)
+
+(defun gcd_list(L d)
+	(cond 
+;		((print d))
+        ((NULL L) d)
+		((not (integerp (car L))) (gcd_list (cdr L) d )) 
+
+		((EQUAL d 0) (gcd_list (cdr L) (car L))) 
+      		((integerp (car L)) (gcd_list (cdr L) (get_gcd (car L) d)))
+;		((= d 1) 1)
+		
+
+	)
+)
+
+; now the wrapper 
+(defun gcd_funct (L)
+	(gcd_list L 0))

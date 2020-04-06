@@ -1,0 +1,42 @@
+;return nonlinear with occurences of an element:
+;(1 (2 A (3 A) (A))) => (1 (2 (3) (NIL)))
+
+(defun contains_elem (L e)
+    (cond
+        ((NULL L) NIL)
+        ((listp (car L)) (contains_elem (cdr L) e))
+        ((equal (car L) e) T)
+        (T (contains_elem (cdr L) e))
+    )
+)
+
+(defun get_size (L)
+    (cond
+        ((NULL L) 0)
+        (T (+ 1 ( get_size ( cdr L) )) )
+    )
+)
+
+(defun only_elem (L e)
+    (cond
+;       ((NULL L) NIL)
+        ((and( = 1 (get_size L)) (contains_elem L e)) T)
+        (T NIL)
+    )
+)
+
+(defun replacer (L e)
+    (cond
+        ((NULL L) NIL)
+        ((and (listp (car L)) (only_elem (car L) e)) (cons  NIL (replacer (cdr L) e)))
+;        ((and (atom (car L)) (= (car L) e) (not (NULL (cdr L)))) (cdr L))
+        ((and (atom (car L)) (equal (car L) e))  (replacer(cdr L) e))
+        ((listp (car L)) (cons (replacer (car L) e) (replacer (cdr L) e)))
+        (T (cons (car L) (replacer (cdr L) e)))
+    )
+)
+;(print (cons (replacer '(3) 4) (replacer '(4) 4)))
+;(print (get_size '(1 22 ( 4 5)  3)))
+;(print (only_elem '(2 3) 3))
+;(print (replacer '(1 (2 (3 4) 3 (4) 3 (3 4))) 4))
+(print (replacer '(1 (2 a (3 a))(a)) 'a))

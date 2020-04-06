@@ -1,0 +1,44 @@
+//Determine the list of nodes accesed in postorder in a tree of type (1).
+
+
+(defun left (l m n)
+	(cond 	
+		((null l) nil)
+		((< m n ) nil)
+		(T (cons (car l) (cons (cadr l) (left (cddr l) (+ m (cadr l)) (+ n 1)))))
+	)
+)
+
+(defun leftTree(l)
+	(left (cddr l) 0 0)
+)
+
+(print(leftTree '(A 2 B 1 D 2 E 0 F 0 C 2 G 0 H 0)))
+
+(defun right(l m n)
+	(cond
+		((null l) nil)
+		((< m n) l)
+		(T (right (cddr l) (+ m (cadr l)) (+ n 1)))
+	)
+)
+
+(defun rightTree(l)
+	(right (cddr l) 0 0)
+)
+
+(print(rightTree '(A 2 B 1 D 2 E 0 F 0 C 2 G 0 H 0)))
+
+
+
+(defun postorder (l)
+    (cond 
+            ((NULL l ) NIL)
+            ((AND (NULL (leftTree l)) (NULL (rightTree l))) (list(car l)))
+            ((NULL (rightTree l)) (append (postorder (leftTree l))(list(car l))))
+            ((NULL (rightTree l)) (append (postorder (rightTree l))(list(car l))))
+            (T (append (postorder (leftTree l)) (append (postorder  (rightTree l)) (list(car l)))))      
+    )
+)
+
+(print(postorder '(A 2 B 1 D 2 E 0 F 0 C 2 G 0 H 0)))

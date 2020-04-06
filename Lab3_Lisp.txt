@@ -1,0 +1,27 @@
+% Write a function that removes all occurrences of an atom from any level of a list
+
+%rElem(l1..ln, 1) = 
+%	{É(i..n) rElem(li), if l1 - list }
+%	{l1 U rElem(l2..ln, e) , if l1 - atom & l1 != e}
+%	{rElem(l2..ln) , if l1- atom & l1 = e}
+	
+	
+(defun rElem(L k)
+	(cond
+		((listp (car L)) (mapcar 'rElem L))
+		(and(atom (car L)) (= (car L) k) (rElem (cdr L) k)
+		(T (cons (car L) (rElem (cdr L) k)))
+	)
+)
+
+;gnu clisp 2.49
+
+(defun rmv (l k)
+    (cond
+        ((and (atom l) (= l k)) NIL)
+        ((atom l) l)
+        ((listp l) (apply 'rmv (mapcar 'rmv l) k))
+    )
+)
+
+(print (rmv '(1 2 3) 2))

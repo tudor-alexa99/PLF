@@ -1,0 +1,66 @@
+;gnu clisp 2.49
+
+(defun repl (L)
+    (cond
+        ((NULL L) NIL)
+        ((numberp (car L))(cons( + 1 (car L))(repl (cdr L))))
+        ((atom (car L)) (cons (car L)(repl (cdr L))))
+        ((listp (car L)) (cons (repl (car L)) (repl (cdr L))))
+    )
+)
+
+
+                 
+(defun repl2(L)
+    (cond
+        ((numberp L) (+ 1 L))
+        ((atom L) L)
+        ((listp L) (mapcar #'repl2 L))
+    )
+)
+
+;(print (repl2 '(1 A 2 (3 B) 4) ))
+
+
+(defun flatten (L)
+    (mapcan #'(lambda (a)
+                      (cond
+                          ((atom a) (list a))
+                          (T (flatten a))
+                      )) L))
+
+(print (flatten '(1 2 3 (4 5) 6 (7 (8 9 (10) ) ) ) ) )
+
+;extract only numeric atoms 
+
+(defun numeric (L)
+    (cond
+        ((NULL L) NIL)
+        ((numberp  (car L)) (cons (car L) (numeric (cdr L))))
+        (T (numeric (cdr L)))
+    )
+)
+
+; get the maximum numeric of a list 
+
+(defun getMax (L)
+    (cond
+        ((NULL (cdr L)) (car L))
+        (T (MAX (car L)(getMax (cdr L))))
+    )
+)
+
+(defun check (L)
+    (cond 
+        ((NULL (numeric (flatten L))) NIL)
+        ((equal (mod (getMax( numeric L)) 2) 0) )
+    )
+)
+
+(defun main1(L level)
+    (cond 
+        ((atom L) 0)
+        ((and (check L) (= (mod level 2) 0)) (+ 1 apply '+ mapcar #'(lambda (a) (main1 a (+ level 1))) L))
+        (T (apply '+ (mapcar #' (lambda (a) (main1 a (+ level 1))) L)))
+    )
+)

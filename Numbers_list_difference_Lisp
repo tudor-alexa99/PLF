@@ -1,0 +1,49 @@
+;gnu clisp 2.49
+
+; function to compute the difference of 2 numbers written as lists 
+
+;function that reverses the initial lists :
+
+(defun reverse_list(L)
+	(cond 
+		((NULL L) NIL)
+		(T (APPEND (reverse_list (cdr L)) (LIST (car L))))
+	)
+) 
+
+;function for substracting the numbers:
+;c - carry (p - power) ; r -result 
+; I don't need the power 
+
+
+(defun sub(L K c )
+	(cond
+        ((and(NULL L) (NULL K)) NIL)
+        ((and(NULL K) (< (- (car L) c )0 ) ) (cons(+ (- (car L)  c) 10) (sub (cdr L) NIL 1)))
+        ((and(NULL K) (>= (- (car L)c )0) ) (cons(- (car L)  c) (sub (cdr L) NIL 0)))
+        ( (>= (-(car L) (car K) c ) 0) (cons (-(car L) (car K) c ) (sub (cdr L) (cdr K) 0) ))
+        ( (< (-(car L) (car K) c ) 0) (cons( + (-(car L) (car K) c ) 10) (sub (cdr L) (cdr K) 1 )))
+    )
+)
+    
+;(print (reverse_list (sub '(0 3 3 3) '(1 1 1) 0)))
+
+(defun wrapper (L k)
+    (reverse_list (sub (reverse_list L) (reverse_list K) 0)))
+
+(defun no_zeros( L )
+    (cond 
+        (( = (car L) 0) (cdr L))
+        (T L)))
+
+
+
+
+(print (no_zeros (wrapper '(3 3 3) '(1 1 1))))
+(print (no_zeros (wrapper '(3 3 3) '(2 2))))
+(print (no_zeros (wrapper '(3 3 3) '(2 8))))
+(print (no_zeros (wrapper '(1 1 1) '(2 5))))
+
+
+
+

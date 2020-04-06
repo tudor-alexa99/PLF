@@ -1,0 +1,18 @@
+(defun rmv (l k)
+    (cond
+        ((and (atom l) (= l k)) NIL)
+        ((atom l) l)
+        ((listp l) (append (mapcar #'(lambda(a) (rmv a k)) l)))
+    )
+)
+
+(defun excludeNils (L)
+    (cond
+        ((null L) '())
+        ((atom (car L)) (if (equal (car L) NIL) (excludeNils (cdr L)) (cons (car L) (excludeNils (cdr L)))))
+        ((listp (car L)) (cons (excludeNils (car L)) (excludeNils (cdr L))))
+    )
+)
+
+(print (excludeNils (rmv '(1 2 (3 4) 3 4) 3)))
+	

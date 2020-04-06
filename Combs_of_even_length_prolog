@@ -1,0 +1,64 @@
+%removeN(l1..ln, n, pos) =
+%		[], if L = []
+%		l1 U removeN(l2..ln, n, pos + 1) , if pos != n
+%		removeN(l2..ln, n*2, pos + 1), if pos == n
+
+%(i, i, i, o)
+
+removeN([], _, _, []).
+removeN([_|T], N, P, R) :-
+    P =:= N,
+    !,
+    N1 is N * 2, 
+    P1 is P +1,
+    removeN(T, N1, P1, R).
+removeN([H|T], N, P,[H|R]) :-
+    P1 is P + 1,
+    removeN(T, N, P1, R). 
+
+% even_length(L, N) :(i, o)
+
+get_length([], 0).
+get_length([_|T], R1) :-
+    get_length(T, R),
+    R1 is R + 1.
+
+even_length(L) :- 
+    get_length(L, R),
+    R mod 2 =:= 0.
+
+comb([E|_], 1, [E]).
+comb([H|T], K, [H|R]) :-
+    K > 1,
+    K1 is K -1,
+    comb(T, K1, R).
+comb([_|T], K, R) :-
+    comb(T, K ,R).
+
+oneResult(L, N , R) :-
+    comb(L, N, R),
+    even_length(R).
+
+allResults(L, N, Rfinal1) :- findall(Rpart, oneResult(L, N, Rpart), Rfinal),
+    Rfinal1 = [[]| Rfinal].
+
+%perm 
+%myinsert(i, i, o)
+
+
+myinsert([], E, [E]).
+myinsert([H|T], E, [E, H|T]).
+myinsert([H|T], E, [H|Tr]) :-
+    myinsert(T, E, Tr).
+
+
+perm([], []).
+perm([H|T], R) :-
+    perm(T, R2),
+    myinsert(R2, H, R).
+
+arj(L, K, S):-
+    comb(L, K, R),
+    even_length(R),
+    perm(R, S).
+

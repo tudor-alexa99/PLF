@@ -1,0 +1,46 @@
+%combintions (i, i, o)
+
+comb([E|_], 1, [E]).
+comb([H|T], K, [H|R]) :-
+    K > 1,
+    K1 is K -1,
+    comb(T, K1, R).
+comb([_|T], K, R) :-
+    comb(T, K, R).
+
+
+%minsert(i, i, o)
+
+minsert([], E, [E]).
+minsert([H|T], E, [E, H|T]).
+minsert([H|T], E, [H|Tr]) :-
+    minsert(T, E, Tr).
+
+perm([], []).
+perm([H|T], R) :-
+    perm(T, Tr),
+    minsert(Tr, H, R).
+
+%prod(l -list, c - colector, s -solutions)
+
+%prod(i, i, o)
+prod([], C, C).
+prod([H|T], C, P) :-
+    P1 is C * H ,
+    prod(T, P1, P).
+
+arj(L, K, R) :-
+    comb(L, K, R1),
+    perm(R1, R).
+
+oneSol([],_,_, []).
+oneSol(L, P, K, R) :-
+    arj(L, K, R),
+    prod(R, 1, P).
+
+allSol(L, K, P, Rfinal) :-
+    findall(Rpart, oneSol(L, K, P, Rpart), Rfinal).
+
+
+
+
